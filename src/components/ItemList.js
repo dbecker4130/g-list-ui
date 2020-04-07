@@ -16,10 +16,6 @@ const ItemList = () => {
 
     console.log('DATA', data);
     
-    // useEffect(() => {
-    //     axios.get('http://localhost:4000')
-    // }, [])
-    
     return (
         <div style={{ width: "500px", height: "auto", border: "1px solid blue" }}>
             <h2>Item List</h2>

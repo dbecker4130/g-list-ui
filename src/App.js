@@ -1,5 +1,6 @@
 import React from 'react';
 import ItemList from './components/ItemList';
+import AddItem from './components/AddItem';
 import './App.css';
 
 function App() {
@@ -7,6 +8,7 @@ function App() {
     <div className="App">
       <div>
         <ItemList />
+        <AddItem />
       </div>
 
     </div>
