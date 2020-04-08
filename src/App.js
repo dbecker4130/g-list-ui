@@ -6,9 +6,9 @@ import './App.css';
 function App() {
   return (
     <div className="App">
-      <div>
-        <ItemList />
+      <div style={{display: "inline-flex"}}>
         <AddItem />
+        <ItemList />
       </div>
 
     </div>

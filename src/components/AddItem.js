@@ -11,8 +11,8 @@ const AddItem = () => {
     };
     const [formState, setFormState] = useState(initialForm);
     const ADD_ITEM = gql`
-        mutation addItem {
-            addItem(name: "test", desc: "name") {
+        mutation addItem($itemName: String!, $itemDesc: String!) {
+            addItem(name: $itemName, desc: $itemDesc) {
                 name
                 desc
             }
@@ -20,13 +20,17 @@ const AddItem = () => {
     `;
     const client = useApolloClient();
     const [sendItem, { loading, error }] = useMutation(ADD_ITEM, {
+        variables: {
+            itemName: formState.name,
+            itemDesc: formState.desc,
+        },
         onCompleted({ sendItem }) {
             console.log('onCompleted()', sendItem);
-            
+            client.writeData({ data: { getItems: [sendItem]} })
         }
     });
     return (
-        <div>
+        <div style={{ width: "500px", height: "200px", border: "1px solid blue" }}>
             <h2>Create an Item</h2>
             <input
                 value={formState.name}
