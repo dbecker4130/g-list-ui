@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
+import { Button, Card } from '@material-ui/core';
+import AddItem from './AddItem';
 
-
-const ItemList = () => {
+const List = () => {
     const [selectedItem, setSelectedItem] = useState('');
     console.log('selectedItem', selectedItem);
     
@@ -12,7 +13,6 @@ const ItemList = () => {
             getItems {
                 id
                 name
-                desc
             }
         }
     `;
@@ -35,26 +35,35 @@ const ItemList = () => {
     console.log('DATA', data);
     
     return (
-        <div style={{ width: "500px", height: "auto", border: "1px solid blue" }}>
-            <h2>Item List</h2>
-            <div >
-
+        <Card 
+            style={{ width: "500px", margin: "0 auto" }}
+            variant="outlined"
+        >
+            <h2>LIST NAME</h2>
             {data && data.getItems.map((item) => (
-                <div style={{ display: 'flex', justifyContent: 'space-between', border: '1px solid red'}}>
-                    <p>{item.name}</p>
-                    <p>{item.desc}</p>
-                    <button
+                <Card 
+                    style={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        width: '90%', 
+                        margin: '5%', 
+                    }}
+                    raised
+                    variant="outlined"
+                >
+                    <p style={{ paddingLeft: "5%" }}>{item.name}</p>
+                    <Button
                         onFocus={() => setSelectedItem(item.id)}
                         onClick={() => deleteItem()}
                     >
                         DELETE
-                    </button>
+                    </Button>
 
-                </div>
+                </Card>
                 ))}
-            </div>
-        </div>
+            <AddItem />
+        </Card>
     )
 };
 
-export default ItemList;
+export default List;
