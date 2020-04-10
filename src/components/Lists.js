@@ -9,11 +9,38 @@ import {
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import AddItem from './AddItem';
+import AddList from './AddList';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+      padding: '15px',
+      flexGrow: 1,
+    },
+    paper: {
+      padding: theme.spacing(1),
+    //   textAlign: 'center',
+      color: theme.palette.text.secondary,
+      background: theme.palette.background.default,
+    },
+    name: {
+        // border: '1px solid green',
+        padding: '1%',
+        width: '85%',
+        margin: 0,
+    },
+    button: {
+        padding: '0px',
+        // border: '1px solid blue',
+    },
+  }));
 
 const Lists = () => {
     const [selectedItem, setSelectedItem] = useState('');
     const [selectedList, setSelectedList] = useState('');
     console.log('selctredITem', selectedItem);
+
+    const classes = useStyles();
     
     const GET_LISTS = gql`
         query getLists {
@@ -58,16 +85,12 @@ const Lists = () => {
     console.log('LISTS', data);
     
     return (
-        <div>
-            <Grid container spacing={3}>
+        <div className={classes.root}>
+            <Grid container spacing={2}>
             {data && data.getLists.map((value) => (
                 <Grid key={value} item xs={6} sm={3}>
-                    <Paper>
-                    <Card 
-                        style={{ margin: "0 auto" }}
-                        variant="outlined"
-                    >
-                        <h2>{value.name}</h2>
+                    <Paper className={classes.paper}>
+                        <h2 style={{ textAlign: 'center' }}>{value.name}</h2>
                         <Button
                             onFocus={() => setSelectedList(value.id)}
                             onClick={() => deleteList()}
@@ -81,14 +104,16 @@ const Lists = () => {
                                 style={{ 
                                     display: 'flex', 
                                     justifyContent: 'space-between', 
-                                    width: '90%', 
-                                    margin: '5%', 
+                                    // width: '90%', 
+                                    height: 'auto',
+                                    margin: '1%', 
                                 }}
                                 raised
-                                variant="outlined"
+                                // variant="outlined"
                             >
-                                <p style={{ paddingLeft: "5%" }}>{item.name}</p>
+                                <p className={classes.name}>{item.name}</p>
                                 <Button
+                                    className={classes.button}
                                     onFocus={() => setSelectedItem(item.id)}
                                     onClick={() => deleteItem()}
                                 >
@@ -99,11 +124,14 @@ const Lists = () => {
                             ))
                         }
                         <AddItem listId={value.id} />
-                    </Card>
-                        
                     </Paper>
                 </Grid>
             ))}
+            <Grid item xs={6} sm={3}>
+                <Paper className={classes.paper}>
+                    <AddList />
+                </Paper>
+            </Grid>
             </Grid>
         </div>
     );

@@ -2,6 +2,7 @@ import React from 'react';
 import {
     AppBar,
     Typography,
+    Link,
     MenuItem,
     IconButton,
     Toolbar
@@ -10,15 +11,27 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 const Navbar = () => {
     return (
-        <AppBar position="static">
-            <Toolbar>
-                <IconButton
-                    edge="start"
-                >
-                    <MenuIcon />
-                </IconButton>
-            </Toolbar>
-        </AppBar>
+        <div>
+            <AppBar position="static" style={{ backgroundColor: '#c2d6d6', width: '100%' }}>
+                <Toolbar>
+                    <IconButton
+                        edge="start"
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                    <Typography>
+                        <Link
+                            color="inherit"
+                            style={{
+                                fontFamily: "Pacifico"
+                            }}
+                            >
+                            G-List
+                        </Link>
+                    </Typography>
+                </Toolbar>
+            </AppBar>
+        </div>
     )
 }
 
