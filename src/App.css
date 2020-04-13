@@ -8,6 +8,29 @@
   pointer-events: none;
 }
 
+.flexbox {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  border: 1px solid blue;
+  height: 500px;
+}
+
+.flexbox .board {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: #313131;
+  /* padding: 15px; */
+}
+
+.flexbox .board .card {
+  /* padding: 15px 25px; */
+  background-color: bisque;
+  cursor: pointer;
+  margin-bottom: 30px;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

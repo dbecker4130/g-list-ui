@@ -17,6 +17,8 @@ import EditItem from './EditItem';
 import AddList from './AddList';
 import { makeStyles } from '@material-ui/core/styles';
 import CommonPopover from './common/CommonPopover';
+import CommonDraggable from './common/CommonDraggable';
+import CommonDraggableItem from './common/CommonDraggableItem';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -97,80 +99,97 @@ const Lists = () => {
 
   const { data, loading, error } = useQuery(GET_LISTS);
   console.log('LISTS', data);
-
-  const editItem = () => <EditItem/>;
     
   return (
     <div className={classes.root}>
       <h1>::Board Name::</h1>
-      <Grid container spacing={2}>
-      {data && data.getLists.map((value) => (
-        <Grid key={value} item xs={6} sm={3}>
-          <Paper className={classes.paper}>
-            {/* List menu */}
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <CommonPopover
-                btnStyle={{ padding: 0, minWidth: '10px'}}
-                buttonText=""
-                icon={<MoreVert />}
-                body={
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <Button
-                      onFocus={() => setSelectedList(value.id)}
-                      onClick={() => deleteList()}
-                    >
-                      DELETE LIST
-                    </Button>
-                    <Button
-                      // onFocus={() => setSelectedList(value.id)}
-                      // onClick={() => deleteList()}
-                    >
-                      MOVE ->
-                    </Button>
-                  </div>
-                }
-              />
-            </div>
-            {/* End List Menu */}
-            <h2 style={{ textAlign: 'center' }}>{value.name}</h2>
-
-              {
-                value.items.map((item) => (
-                <Card
-                  onClick={() => setEditMode(item.id)}
-                  style={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    height: 'auto',
-                    margin: '1%', 
-                  }}
-                  raised
-                >
-                  {
-                    editMode === item.id ? (
-                      <EditItem selectedItem={editMode} onComplete={() => setEditMode() } />
-                    ) :
-                    <p className={classes.name}>{item.name}</p>
+      <div className="flexbox">
+        <Grid container spacing={2}>
+        {data && data.getLists.map((value) => (
+          <Grid key={value} item xs={6} sm={3}>
+            <Paper className={classes.paper}>
+              {/* List menu */}
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <CommonPopover
+                  btnStyle={{ padding: 0, minWidth: '10px'}}
+                  buttonText=""
+                  icon={<MoreVert />}
+                  body={
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <Button
+                        onFocus={() => setSelectedList(value.id)}
+                        onClick={() => deleteList()}
+                      >
+                        DELETE LIST
+                      </Button>
+                      <Button
+                        // onFocus={() => setSelectedList(value.id)}
+                        // onClick={() => deleteList()}
+                      >
+                        MOVE ->
+                      </Button>
+                    </div>
                   }
-                  <Button
-                    className={classes.button}
-                    onFocus={() => setSelectedItem(item.id)}
-                    onClick={() => deleteItem()}
-                  >
-                    DELETE
-                  </Button>
-                </Card>
-              ))}
-            <AddItem listId={value.id} />
-          </Paper>
+                />
+              </div>
+              {/* End List Menu */}
+              <h2 style={{ textAlign: 'center' }}>{value.name}</h2>
+                <CommonDraggable className="board" id={value.id}>
+                {
+                  value.items.map((item) => (
+                    <CommonDraggableItem id={item.id} className="card" draggable="true">
+                      <Card
+                        className="handle"
+                        onClick={() => setEditMode(item.id)}
+                        style={{
+                          border: '1px solid red',
+                          display: 'flex', 
+                          justifyContent: 'space-between', 
+                          height: 'auto',
+                          margin: '1%', 
+                        }}
+                        raised
+                      >
+                        {
+                          editMode === item.id ? (
+                            <EditItem selectedItem={editMode} onComplete={() => setEditMode() } />
+                          ) :
+                          <p className={classes.name}>{item.name}</p>
+                        }
+                        <Button
+                          className={classes.button}
+                          onFocus={() => setSelectedItem(item.id)}
+                          onClick={() => deleteItem()}
+                        >
+                          DELETE
+                        </Button>
+                      </Card>
+                    </CommonDraggableItem>
+                ))}
+                </CommonDraggable>
+              <AddItem listId={value.id} />
+            </Paper>
+          </Grid>
+        ))}
+          <Grid item xs={6} sm={3}>
+            <Paper className={classes.paper}>
+              <AddList />
+            </Paper>
+            {/* <div className="flexbox">
+              <CommonDraggable id="board-1" className="board">
+                <CommonDraggableItem id="card-1" className="card" draggable="true">
+                  <p>Card one</p>
+                </CommonDraggableItem>
+              </CommonDraggable>
+              <CommonDraggable id="board-2" className="board">
+                <CommonDraggableItem id="card-2" className="card" draggable="true">
+                  <p>Card two</p>
+                </CommonDraggableItem>
+              </CommonDraggable>
+            </div> */}
+          </Grid>
         </Grid>
-      ))}
-        <Grid item xs={6} sm={3}>
-          <Paper className={classes.paper}>
-            <AddList />
-          </Paper>
-        </Grid>
-      </Grid>
+      </div>
     </div>
   );
 }
