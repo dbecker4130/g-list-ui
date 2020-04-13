@@ -9,6 +9,7 @@ import {
   Button, 
   Typography
 } from '@material-ui/core';
+import { GET_LISTS } from './Lists';
 
 const AddItem = ({ listId }) => {
   const initialForm = { name: '', listId: listId };
@@ -23,15 +24,22 @@ const AddItem = ({ listId }) => {
     }
   `;
   const client = useApolloClient();
-  const [sendItem, { loading, error }] = useMutation(ADD_ITEM, {
+  const [createItem, { loading, error }] = useMutation(ADD_ITEM, {
     variables: {
       itemName: formState.name,
       listId: formState.listId
     },
-    onCompleted({ sendItem }) {
-      console.log('onCompleted()', sendItem);
-      // client.writeData({ data: { getItems: [sendItem]} })
-    }
+    refetchQueries: [
+      {
+        query: GET_LISTS,
+      },
+    ]
+    // onCompleted({ sendItem }) {
+    //   console.log('onCompleted()', sendItem);
+    //   client.writeData({ data: { item: formState } })
+    //   if (loading) return <p>Loading...</p>;
+    //   if (error) return <p>An error occurred</p>;
+    // }
   });
 
   return (
@@ -47,7 +55,8 @@ const AddItem = ({ listId }) => {
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
-                  sendItem();
+                  createItem();
+                  setFormState(initialForm);
                 }}
               >
                 <TextField

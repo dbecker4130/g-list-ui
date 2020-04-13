@@ -13,7 +13,6 @@ import CommonPopover from './common/CommonPopover';
 const AddList = () => {
   const initialForm = { name: '' };
   const [formState, setFormState] = useState(initialForm);
-  const [anchorEl, setAnchorEl] = useState(null);
   const CREATE_LIST = gql`
     mutation addList($listName: String!) {
       addList(name: $listName) {

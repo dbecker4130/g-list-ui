@@ -41,14 +41,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Lists = () => {
-  const [selectedItem, setSelectedItem] = useState('');
-  const [selectedList, setSelectedList] = useState('');
-  const [editMode, setEditMode] = useState(false);
-  console.log('selctredITem', selectedItem);
-
-  const classes = useStyles();
-  
   const GET_LISTS = gql`
     query getLists {
       getLists {
@@ -62,6 +54,16 @@ const Lists = () => {
     }
   `;
 
+const Lists = () => {
+  const [selectedItem, setSelectedItem] = useState('');
+  const [selectedList, setSelectedList] = useState('');
+  const [editMode, setEditMode] = useState('');
+  console.log('editMode', editMode);
+  
+  console.log('selctredITem', selectedItem);
+
+  const classes = useStyles();
+  
   const DELETE_LIST = gql`
   mutation deleteList($id: ID!) {
     deleteList(id: $id) {
@@ -85,7 +87,12 @@ const Lists = () => {
   const [deleteItem, { itemErrors }] = useMutation(DELETE_ITEM, {
     variables: {
       id: selectedItem,
-    }
+    },
+    refetchQueries: [
+      {
+        query: GET_LISTS,
+      },
+    ]
   });
 
   const { data, loading, error } = useQuery(GET_LISTS);
@@ -130,19 +137,21 @@ const Lists = () => {
               {
                 value.items.map((item) => (
                 <Card
-                  onClick={() => setEditMode(true)}
+                  onClick={() => setEditMode(item.id)}
                   style={{ 
                     display: 'flex', 
                     justifyContent: 'space-between', 
-                    // width: '90%', 
                     height: 'auto',
                     margin: '1%', 
                   }}
                   raised
                 >
-                  { editMode ?  editItem() : (
+                  {
+                    editMode === item.id ? (
+                      <EditItem selectedItem={editMode} onComplete={() => setEditMode() } />
+                    ) :
                     <p className={classes.name}>{item.name}</p>
-                  )}
+                  }
                   <Button
                     className={classes.button}
                     onFocus={() => setSelectedItem(item.id)}
@@ -167,3 +176,4 @@ const Lists = () => {
 }
 
 export default Lists;
+export { GET_LISTS };
