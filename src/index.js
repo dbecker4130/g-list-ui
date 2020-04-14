@@ -8,6 +8,7 @@ import { ApolloClient } from "apollo-client";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { HttpLink } from "apollo-link-http";
 import { ApolloProvider, useQuery } from '@apollo/react-hooks';
+import { GET_LISTS } from './components/Lists';
 
 const cache = new InMemoryCache();
 const link = new HttpLink({
@@ -19,11 +20,18 @@ const client = new ApolloClient({
   link
 });
 
-cache.writeData({
-  data: {
-    items: [],
-  }
-})
+// cache.writeData({
+//   data: {
+//     items: [],
+//   }
+// });
+
+// const queryResult = cache.readQuery({
+//   query: GET_LISTS
+// });
+
+// console.log('QUERY RES', queryResult);
+
 
 ReactDOM.render(
     <ApolloProvider client={client}>
