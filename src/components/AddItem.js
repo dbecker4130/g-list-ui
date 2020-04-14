@@ -60,6 +60,7 @@ const AddItem = ({ listId }) => {
                 }}
               >
                 <TextField
+                  autoFocus
                   size="small"
                   value={formState.name}
                   variant="outlined"

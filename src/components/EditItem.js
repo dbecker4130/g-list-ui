@@ -8,11 +8,10 @@ import {
   Typography,
   TextField
 } from '@material-ui/core';
+import { Save, Undo, Cancel } from '@material-ui/icons';
 import { GET_LISTS } from './Lists';
 
 const EditItem = ({ selectedItem, onComplete }) => {
-  console.log('selectedItemToEdit', selectedItem);
-  
   const initialForm = { id: selectedItem, name: '' };
   const [formState, setFormState] = useState(initialForm);
   
@@ -51,8 +50,20 @@ const EditItem = ({ selectedItem, onComplete }) => {
         value={formState.name}
         autoFocus
         variant="outlined"
-        onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+        onChange={(e) => setFormState({ ...formState, name: e.target.value })} 
       />
+      <div>
+
+      </div>
+      <Button type="submit">
+        <Save />
+      </Button>
+      <Button onClick={() => setFormState({ ...formState, name: '' })}>
+        <Undo />
+      </Button>
+      <Button onClick={() => onComplete()}>
+        Cancel
+      </Button>
     </form>
   );
 };

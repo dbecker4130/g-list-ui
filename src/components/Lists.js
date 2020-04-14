@@ -60,8 +60,6 @@ const Lists = () => {
   const [editMode, setEditMode] = useState('');
   console.log('editMode', editMode);
   
-  console.log('selctredITem', selectedItem);
-
   const classes = useStyles();
   
   const DELETE_LIST = gql`
@@ -107,7 +105,7 @@ const Lists = () => {
       {data && data.getLists.map((value) => (
         <Grid key={value} item xs={6} sm={3}>
           <Paper className={classes.paper}>
-            {/* List menu */}
+            {/* List nav menu */}
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <CommonPopover
                 btnStyle={{ padding: 0, minWidth: '10px'}}
@@ -137,7 +135,7 @@ const Lists = () => {
               {
                 value.items.map((item) => (
                 <Card
-                  onClick={() => setEditMode(item.id)}
+                  onDoubleClick={() => setEditMode(item.id)}
                   style={{ 
                     display: 'flex', 
                     justifyContent: 'space-between', 
@@ -148,10 +146,42 @@ const Lists = () => {
                 >
                   {
                     editMode === item.id ? (
-                      <EditItem selectedItem={editMode} onComplete={() => setEditMode() } />
-                    ) :
-                    <p className={classes.name}>{item.name}</p>
-                  }
+                      <EditItem 
+                        selectedItem={editMode} 
+                        onComplete={() => { 
+                          setEditMode('');
+                          console.log('EDIT MODE', editMode);
+                          
+                        }}
+                      />
+                    ) : (
+                      <>
+                        <p className={classes.name}>{item.name}</p>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                          <CommonPopover
+                            btnStyle={{ padding: 0, minWidth: '10px'}}
+                            buttonText=""
+                            icon={<MoreVert />}
+                            body={
+                              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                <Button
+                                  onFocus={() => setSelectedItem(item.id)}
+                                  onClick={() => deleteItem()}
+                                  >
+                                  DELETE ITEM
+                                </Button>
+                                <Button
+                                  // onFocus={() => setSelectedList(value.id)}
+                                  onClick={() => setEditMode(item.id)}
+                                  >
+                                  EDIT
+                                </Button>
+                              </div>
+                            }
+                            />
+                        </div>
+                      </>
+                    )}
                   <Button
                     className={classes.button}
                     onFocus={() => setSelectedItem(item.id)}
