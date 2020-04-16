@@ -2,19 +2,16 @@ import React, { useState } from 'react';
 import { useApolloClient, useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import CommonPopover from './common/CommonPopover';
+import { GET_LIST } from '../graphql/Queries';
 
-import ApolloClient from 'apollo-client';
 import { 
   TextField, 
   Button, 
-  Typography
 } from '@material-ui/core';
-import { GET_LISTS } from './Lists';
 
 const AddItem = ({ listId }) => {
   const initialForm = { name: '', listId: listId };
   const [formState, setFormState] = useState(initialForm);
-  console.log('formState', formState);
   const ADD_ITEM = gql`
     mutation addItem($itemName: String!, $listId: ID!) {
       addItem(name: $itemName, listId: $listId) {
@@ -31,7 +28,8 @@ const AddItem = ({ listId }) => {
     },
     refetchQueries: [
       {
-        query: GET_LISTS,
+        query: GET_LIST,
+        variables: { listId }
       },
     ]
     // onCompleted({ sendItem }) {
@@ -41,7 +39,7 @@ const AddItem = ({ listId }) => {
     //   if (error) return <p>An error occurred</p>;
     // }
   });
-
+  
   return (
     <div>
       <CommonPopover

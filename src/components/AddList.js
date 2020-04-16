@@ -1,34 +1,43 @@
 import React, { useState } from 'react';
-import { useApolloClient, useMutation } from '@apollo/react-hooks';
+import { useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 
-import ApolloClient from 'apollo-client';
+// import ApolloClient from 'apollo-client';
 import { 
   TextField, 
-  Button, 
-  Typography
+  Button,
 } from '@material-ui/core';
 import CommonPopover from './common/CommonPopover';
+import { GET_BOARD } from '../graphql/Queries';
 
-const AddList = () => {
-  const initialForm = { name: '' };
+const AddList = ({ boardId }) => {
+  const initialForm = { name: '' , boardId: boardId ? boardId.toString() : '' };
   const [formState, setFormState] = useState(initialForm);
+  
   const CREATE_LIST = gql`
-    mutation addList($listName: String!) {
-      addList(name: $listName) {
+    mutation addList($listName: String!, $boardId: ID!) {
+      addList(name: $listName, boardId: $boardId) {
           name
+          boardId
       }
     }
   `;
-  const client = useApolloClient();
+  // const client = useApolloClient();
   const [createList, { loading, error }] = useMutation(CREATE_LIST, {
     variables: {
       listName: formState.name,
+      boardId: formState.boardId
     },
-    onCompleted({ createList }) {
-      console.log('onCompleted()', createList);
-      // client.writeData({ data: { getItems: [sendItem]} })
-    }
+    refetchQueries: [
+      {
+        query: GET_BOARD,
+        variables: { boardId }
+      },
+    ],
+    // onCompleted({ createList }) {
+    //   console.log('onCompleted()', createList);
+    //   // client.writeData({ data: { getItems: [sendItem]} })
+    // }
   });
 
   return (
@@ -36,19 +45,25 @@ const AddList = () => {
       <CommonPopover
         buttonText="Add a List +"
         body={
-          <>
-            <Typography>Create a List</Typography>
+          <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            createList();
+            setFormState(initialForm);
+          }}
+          >
             <TextField
-                value={formState.name}
-                variant="outlined"
-                onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+              autoFocus
+              value={formState.name}
+              variant="outlined"
+              onChange={(e) => setFormState({ ...formState, name: e.target.value, boardId: boardId })}
             />
             <Button
-                onClick={() => createList()}
+              type="submit"
             >
-                SEND
+              SEND
             </Button>
-          </>
+          </form>
         }
       />
     </div>
