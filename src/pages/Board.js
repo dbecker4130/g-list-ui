@@ -1,17 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Lists from '../components/Lists';
-import { useParams } from 'react-router-dom';
+import { BoardContext } from '../context/BoardContext';
 
-const Board = ({ boards }) => {
-  let { boardName } = useParams();
-  let tempBoard;
-  if (boards) {
-    tempBoard = boards.filter((board) => board.name === boardName)
-  }
+const Board = () => {
+  const { board } = useContext(BoardContext);
+
   return (
     <div>
-      <h1 style={{ marginLeft: '5%' }}>Name: {boardName}</h1>
-      <Lists board={tempBoard} />
+      <h1 style={{ marginLeft: '5%' }}>Name: {board.name}</h1>
+      <Lists board={board} />
     </div>
   );
 };

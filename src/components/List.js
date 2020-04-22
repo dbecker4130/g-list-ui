@@ -10,7 +10,7 @@ import gql from 'graphql-tag';
 import AddItem from './AddItem';
 import EditItem from './EditItem';
 import CommonPopover from './common/CommonPopover';
-import { GET_LIST, GET_BOARD } from '../graphql/Queries';
+import { GET_LIST, GET_BOARD, GET_LISTS } from '../graphql/Queries';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
@@ -34,29 +34,40 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const DELETE_LIST = gql`
-mutation deleteList($id: ID!) {
-  deleteList(id: $id) {
-    id
-  }
+  mutation deleteList($id: ID!) {
+    deleteList(id: $id) {
+      id
+    }
 }
 `;
 
 const DELETE_ITEM = gql`
-mutation deleteItem($id: ID!) {
-  deleteItem(id: $id) {
-    id
+  mutation deleteItem($id: ID!) {
+    deleteItem(id: $id) {
+      id
+    }
   }
-}
+`;
+
+const MOVE_ITEM = gql`
+  mutation moveItem($itemId: ID!, $listId: ID!) {
+    moveItem(id: $itemId, listId: $listId) {
+      id
+      listId
+    }
+  }
 `;
 
 const List = ({ list }) => {
   const classes = useStyles();
   const [editMode, setEditMode] = useState('');
   const [selectedItem, setSelectedItem] = useState('');
+  const [moveToId, setMoveToId] = useState('');
 
   const listId = list ? list.id : null;
   const boardId = list ? list.boardId : null;
-
+  console.log('BOARD ID', boardId);
+  
   const [deleteList, { listErrors }] = useMutation(DELETE_LIST, {
     variables: {
       id: listId,
@@ -80,9 +91,28 @@ const List = ({ list }) => {
       },
     ]
   });
+
+  const [moveItem, { moveItemErrors }] = useMutation(MOVE_ITEM, {
+    variables: {
+      itemId: selectedItem,
+      listId: moveToId,
+    },
+    refetchQueries: [
+      {
+        query: GET_BOARD,
+        variables: { boardId }
+      },
+    ]
+  });
   const { data } = useQuery(GET_LIST, {
     variables: {
       listId
+    }
+  });
+
+  const getLists = useQuery(GET_LISTS, {
+    variables: {
+      boardId
     }
   });
 
@@ -156,6 +186,27 @@ const List = ({ list }) => {
                             >
                             EDIT
                           </Button>
+                          <CommonPopover
+                            buttonText="MOVE TO"
+                            body={
+                              <>
+                                { getLists.data && getLists.data.getLists.map((list) => (
+                                  <Button
+                                    onFocus={() => { 
+                                      setSelectedItem(item.id);
+                                      setMoveToId(list.id);
+                                    }}
+                                    onClick={() => {
+                                      moveItem();
+                                    }}
+                                  >
+                                    {list.name}
+                                  </Button>
+                                ))
+                                }
+                              </>
+                          }
+                          />
                         </div>
                       }
                       />
@@ -177,4 +228,3 @@ const List = ({ list }) => {
 }
 
 export default List;
-export { GET_LIST };

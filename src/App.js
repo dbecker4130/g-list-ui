@@ -19,7 +19,7 @@ function App() {
             <Home boards={data} />
           </Route>
           <Route path="/:boardName?">
-            <Board boards={data && data.getBoards}/>
+            <Board />
           </Route>
         </Switch>
       </div>

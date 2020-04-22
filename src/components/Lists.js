@@ -23,12 +23,13 @@ const useStyles = makeStyles((theme) => ({
 
 const Lists = ({ board }) => {
   const classes = useStyles();
-  const boardId = board ? board[0].id : null;
-
+  const boardId = board ? board.id : null;
   const { data, loading, error } = useQuery(GET_BOARD, {
     variables: { boardId }
   });
 
+  console.log('GET_BOARD DATA', data);
+  
   return (
     <div className={classes.root}>
       <Grid container spacing={2}>

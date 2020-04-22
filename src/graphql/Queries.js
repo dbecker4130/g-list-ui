@@ -18,7 +18,20 @@ const GET_BOARD = gql`
         id
         boardId
         name
+        items {
+          id
+          name
+        }
       }
+    }
+  }
+`;
+
+const GET_LISTS = gql`
+  query getLists($boardId: ID!) {
+    getLists(id: $boardId) {
+      id
+      name
     }
   }
 `;
@@ -39,5 +52,6 @@ const GET_LIST = gql`
 export {
     GET_BOARDS,
     GET_BOARD,
+    GET_LISTS,
     GET_LIST
 }

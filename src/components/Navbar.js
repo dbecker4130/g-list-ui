@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
     AppBar,
     MenuItem,
@@ -8,10 +8,13 @@ import {
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Link } from 'react-router-dom';
+import { BoardContext } from '../context/BoardContext';
 
 const Navbar = ({ boards }) => {
   const [anchorEl, setAnchorEl] = useState(null);
-
+  const { board, setBoard } = useContext(BoardContext);
+  console.log('BOard on NAV', board);
+  
   const openMenu = (e) => {
     setAnchorEl(e.currentTarget);
   };
@@ -25,9 +28,10 @@ const Navbar = ({ boards }) => {
       <AppBar position="static" style={{ backgroundColor: '#c2d6d6', width: '100%' }}>
         <Toolbar>
           <IconButton
-              edge="start"
+            onClick={openMenu}
+            edge="start"
           >
-            <MenuIcon onClick={openMenu} />
+            <MenuIcon />
           </IconButton>
           <Menu
             id="simple-menu"
@@ -40,7 +44,11 @@ const Navbar = ({ boards }) => {
               boards && boards.map((board) => (
                 <Link 
                   to={`/${board.name}`}
-                  onClick={closeMenu}
+                  onClick={() => {
+                    setBoard({ id: board.id, name: board.name })
+                    window.localStorage.setItem('currentBoard', JSON.stringify({ id: board.id, name: board.name }));
+                    closeMenu()
+                  }}
                   style={{
                     color: '#000',
                     textDecoration: "none",
