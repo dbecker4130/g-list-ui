@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
-import { useApolloClient, useMutation } from '@apollo/react-hooks';
+import { useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import {
-  Box,
-  Card,
   Button,
-  Typography,
   TextField
 } from '@material-ui/core';
 import { Save, Undo, Cancel } from '@material-ui/icons';
-import { GET_LISTS } from './Lists';
+import { GET_LIST } from '../graphql/Queries';
 
-const EditItem = ({ selectedItem, onComplete }) => {
+const EditItem = ({ selectedItem, listId, onComplete }) => {
   const initialForm = { id: selectedItem, name: '' };
   const [formState, setFormState] = useState(initialForm);
   
@@ -31,7 +28,8 @@ const EditItem = ({ selectedItem, onComplete }) => {
     },
     refetchQueries: [
       {
-        query: GET_LISTS,
+        query: GET_LIST,
+        variables: { listId }
       },
     ]
   });
@@ -62,7 +60,7 @@ const EditItem = ({ selectedItem, onComplete }) => {
         <Undo />
       </Button>
       <Button onClick={() => onComplete()}>
-        Cancel
+        <Cancel />
       </Button>
     </form>
   );

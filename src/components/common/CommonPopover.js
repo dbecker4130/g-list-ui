@@ -4,30 +4,6 @@ import {
   Popover,
 } from '@material-ui/core';
 
-// ::: Example Usage :::
-{/* <CommonPopover
-  buttonText="Add Item +"
-  btnStyle={{ marginLeft: '1%', marginBottom: '2%' }}
-  body={
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-      }}
-    >
-      <TextField
-        autoFocus
-        size="small"
-        variant="outlined"
-      />
-      <Button
-        type="submit"
-      >
-        submit
-      </Button>
-    </form>
-  }
-/> */}
-
 const CommonPopover = ({
   btnStyle,
   buttonText,
@@ -56,14 +32,6 @@ const CommonPopover = ({
         open={open}
         anchorEl={anchorEl}
         onClose={closePopover}
-        // anchorOrigin={{
-        //     vertical: 'top',
-        //     horizontal: 'right',
-        // }}
-        // transformOrigin={{
-        //     vertical: 'top',
-        //     horizontal: 'left',
-        // }}
         >
         {React.cloneElement(body, {
             ...otherProps
