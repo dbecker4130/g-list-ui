@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useApolloClient, useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import CommonPopover from './common/CommonPopover';
+import CommonInput from './common/CommonInput';
 import { GET_LIST } from '../graphql/Queries';
 
 import { 
@@ -12,6 +13,7 @@ import {
 const AddItem = ({ listId }) => {
   const initialForm = { name: '', listId: listId };
   const [formState, setFormState] = useState(initialForm);
+  const [errorMessage, setErrorMessage] = useState('');
   const ADD_ITEM = gql`
     mutation addItem($itemName: String!, $listId: ID!) {
       addItem(name: $itemName, listId: $listId) {
@@ -31,7 +33,11 @@ const AddItem = ({ listId }) => {
         query: GET_LIST,
         variables: { listId }
       },
-    ]
+    ],
+    onError(error) {
+      console.log('ERROR', error.message);
+      setErrorMessage('name required');
+    }
     // onCompleted({ sendItem }) {
     //   console.log('onCompleted()', sendItem);
     //   client.writeData({ data: { item: formState } })
@@ -57,12 +63,16 @@ const AddItem = ({ listId }) => {
                   setFormState(initialForm);
                 }}
               >
-                <TextField
+                <CommonInput
+                  label={errorMessage ? errorMessage : "add to list"}
                   autoFocus
                   size="small"
                   value={formState.name}
                   variant="outlined"
-                  onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+                  onChange={(e) => {
+                    setFormState({ ...formState, name: e.target.value });
+                    setErrorMessage('');
+                  }}
                 />
                 <Button
                   type="submit"

@@ -145,6 +145,7 @@ const List = ({ list }) => {
         {
           data && data.getList.items.map((item) => (
           <Card
+            key={item.id}
             onDoubleClick={() => setEditMode(item.id)}
             style={{ 
               display: 'flex', 
@@ -189,7 +190,7 @@ const List = ({ list }) => {
                           <CommonPopover
                             buttonText="MOVE TO"
                             body={
-                              <>
+                              <div style={{ display: 'flex',  flexDirection: 'column' }}>
                                 { getLists.data && getLists.data.getLists.map((list) => (
                                   <Button
                                     onFocus={() => { 
@@ -204,7 +205,7 @@ const List = ({ list }) => {
                                   </Button>
                                 ))
                                 }
-                              </>
+                              </div>
                           }
                           />
                         </div>

@@ -40,9 +40,20 @@ const Navbar = ({ boards }) => {
             open={Boolean(anchorEl)}
             onClose={closeMenu}
           >
+            <MenuItem>
+              <Link
+                to="/"
+                style={{ textDecoration: 'none', color: '#000' }}
+              >
+                Boards
+              </Link>
+            </MenuItem>
+            {/* <p style={{ margin: '0 15px' }}>Boards</p> */}
+            <hr></hr>
             {
               boards && boards.map((board) => (
-                <Link 
+                <Link
+                  key={board.id}
                   to={`/${board.name}`}
                   onClick={() => {
                     setBoard({ id: board.id, name: board.name })
