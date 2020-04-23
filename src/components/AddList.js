@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/react-hooks';
-import gql from 'graphql-tag';
-
 // import ApolloClient from 'apollo-client';
 import { 
   TextField, 
@@ -10,6 +8,7 @@ import {
 import CommonPopover from './common/CommonPopover';
 import CommonInput from './common/CommonInput';
 import { GET_BOARD } from '../graphql/Queries';
+import { CREATE_LIST } from '../graphql/Mutations';
 
 const AddList = ({ boardId }) => {
   const initialForm = { name: '' , boardId: boardId ? boardId.toString() : '' };
@@ -17,14 +16,6 @@ const AddList = ({ boardId }) => {
   const [errorMessage, setErrorMessage] = useState('');
   console.log('errorMessage', errorMessage);
   
-  const CREATE_LIST = gql`
-    mutation addList($listName: String!, $boardId: ID!) {
-      addList(name: $listName, boardId: $boardId) {
-          name
-          boardId
-      }
-    }
-  `;
   // const client = useApolloClient();
   const [createList, { loading, error }] = useMutation(CREATE_LIST, {
     variables: {

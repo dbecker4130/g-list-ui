@@ -4,13 +4,14 @@ import {
   Card,
   Button,
 } from '@material-ui/core';
-import { MoreVert } from '@material-ui/icons';
+import { MoreVert, DeleteForever } from '@material-ui/icons';
 import { useQuery, useMutation } from '@apollo/react-hooks';
-import gql from 'graphql-tag';
 import AddItem from './AddItem';
 import EditItem from './EditItem';
 import CommonPopover from './common/CommonPopover';
+import CommonEdit from './common/CommonEdit';
 import { GET_LIST, GET_BOARD, GET_LISTS } from '../graphql/Queries';
+import { DELETE_LIST, DELETE_ITEM, MOVE_ITEM } from '../graphql/Mutations';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
@@ -24,39 +25,14 @@ const useStyles = makeStyles((theme) => ({
     background: theme.palette.background.default,
   },
   name: {
-      padding: '1%',
-      width: '85%',
-      margin: 0,
+    padding: '1%',
+    width: '85%',
+    margin: 0,
   },
   button: {
-      padding: '0px',
+    padding: '0px',
   },
 }));
-
-const DELETE_LIST = gql`
-  mutation deleteList($id: ID!) {
-    deleteList(id: $id) {
-      id
-    }
-}
-`;
-
-const DELETE_ITEM = gql`
-  mutation deleteItem($id: ID!) {
-    deleteItem(id: $id) {
-      id
-    }
-  }
-`;
-
-const MOVE_ITEM = gql`
-  mutation moveItem($itemId: ID!, $listId: ID!) {
-    moveItem(id: $itemId, listId: $listId) {
-      id
-      listId
-    }
-  }
-`;
 
 const List = ({ list }) => {
   const classes = useStyles();
@@ -116,12 +92,19 @@ const List = ({ list }) => {
     }
   });
 
+  const buttonStyle = {
+    padding: 0,
+    minWidth: '10px',
+    maxHeight: '25px',
+    // border: '1px solid red',
+  };
+
   return (
     <Paper className={classes.paper}>
       {/* List nav menu */}
       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
         <CommonPopover
-          btnStyle={{ padding: 0, minWidth: '10px'}}
+          btnStyle={buttonStyle}
           buttonText=""
           icon={<MoreVert />}
           body={
@@ -140,8 +123,26 @@ const List = ({ list }) => {
         />
       </div>
       {/* End List Menu */}
-      <h2 style={{ textAlign: 'center' }}>{list.name}</h2>
-
+      {
+        editMode === list.id ? (
+          <CommonEdit
+            props={list}
+            parentId={listId}
+            onComplete={() => {
+              setEditMode('');
+              console.log('EDIT MODE', editMode);
+              
+            }}
+          />
+        ) : (
+          <h2 
+            style={{ textAlign: 'center' }}
+            onDoubleClick={() => setEditMode(list.id)}
+          >
+            {list.name}
+          </h2>
+        )
+      }
         {
           data && data.getList.items.map((item) => (
           <Card
@@ -157,10 +158,21 @@ const List = ({ list }) => {
           >
             {
               editMode === item.id ? (
-                <EditItem 
-                  selectedItem={editMode} 
-                  listId={listId}
-                  onComplete={() => { 
+                // <EditItem 
+                //   selectedItem={editMode} 
+                //   props={item}
+                //   listId={listId}
+                //   onComplete={() => {
+                //     setEditMode('');
+                //     console.log('EDIT MODE', editMode);
+                    
+                //   }}
+                // />
+                <CommonEdit
+                  // selectedItem={editMode}
+                  props={item}
+                  parentId={listId}
+                  onComplete={() => {
                     setEditMode('');
                     console.log('EDIT MODE', editMode);
                     
@@ -171,7 +183,7 @@ const List = ({ list }) => {
                   <p className={classes.name}>{item.name}</p>
                   <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <CommonPopover
-                      btnStyle={{ padding: 0, minWidth: '10px'}}
+                      btnStyle={buttonStyle}
                       buttonText=""
                       icon={<MoreVert />}
                       body={
@@ -215,11 +227,12 @@ const List = ({ list }) => {
                 </>
               )}
             <Button
+              style={buttonStyle}
               className={classes.button}
               onFocus={() => setSelectedItem(item.id)}
               onClick={() => deleteItem()}
             >
-              DELETE
+              <DeleteForever />
             </Button>
           </Card>
         ))}

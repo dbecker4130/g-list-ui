@@ -13,6 +13,7 @@ import AddBoard from '../components/AddBoard';
 import { makeStyles } from '@material-ui/core/styles';
 import { BoardContext } from '../context/BoardContext';
 import { GET_BOARDS } from '../graphql/Queries';
+import { DELETE_BOARD } from '../graphql/Mutations';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,13 +39,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const DELETE_BOARD = gql`
-  mutation deleteBoard($id: ID!) {
-    deleteBoard(id: $id) {
-      id
-    }
-  }
-`;
 
 const Home = ({ boards }) => {
   const classes = useStyles();

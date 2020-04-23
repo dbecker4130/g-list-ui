@@ -4,6 +4,7 @@ import type { Node } from 'react';
 const emptyBoard = {
   id: '',
   name: '',
+  __typename: 'Board'
 };
 
 let storedBoard = JSON.parse(window.localStorage.getItem('currentBoard'));

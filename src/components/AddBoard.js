@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/react-hooks';
-import gql from 'graphql-tag';
 // import ApolloClient from 'apollo-client';
 import { 
   TextField, 
@@ -10,18 +9,13 @@ import {
 import CommonPopover from './common/CommonPopover';
 import CommonInput from './common/CommonInput';
 import { GET_BOARDS } from '../graphql/Queries';
+import { CREATE_BOARD } from '../graphql/Mutations';
 
 const AddBoard = () => {
   const initialForm = { name: '' };
   const [formState, setFormState] = useState(initialForm);
   const [errorMessage, setErrorMessage] = useState('');
-  const CREATE_BOARD = gql`
-    mutation addBoard($boardName: String!) {
-      addBoard(name: $boardName) {
-          name
-      }
-    }
-  `;
+
 //   const client = useApolloClient();
   const [createBoard, { loading, error }] = useMutation(CREATE_BOARD, {
     variables: {

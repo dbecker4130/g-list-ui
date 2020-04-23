@@ -7,20 +7,15 @@ import {
 } from '@material-ui/core';
 import { Save, Undo, Cancel } from '@material-ui/icons';
 import { GET_LIST } from '../graphql/Queries';
+import { EDIT_ITEM } from '../graphql/Mutations';
+import CommonInput from './common/CommonInput';
 
-const EditItem = ({ selectedItem, listId, onComplete }) => {
+const EditItem = ({ selectedItem, listId, onComplete, props }) => {
+  console.log('ssssss', props.__typename);
+  
   const initialForm = { id: selectedItem, name: '' };
   const [formState, setFormState] = useState(initialForm);
   
-  const EDIT_ITEM = gql`
-    mutation editItem($itemId: ID!, $itemName: String!) {
-      editItem(id: $itemId, name: $itemName) {
-        id
-        name
-      }
-    }
-  `;
-
   const [updateItem, { loading, error }] = useMutation(EDIT_ITEM, {
     variables: {
       itemId: formState.id,
@@ -43,10 +38,8 @@ const EditItem = ({ selectedItem, listId, onComplete }) => {
         onComplete();
       }}
     >
-      <TextField
-        size="small"
+      <CommonInput
         value={formState.name}
-        autoFocus
         variant="outlined"
         onChange={(e) => setFormState({ ...formState, name: e.target.value })} 
       />
